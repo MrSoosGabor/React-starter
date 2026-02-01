@@ -15,10 +15,14 @@ const sourcePackageJson = path.join(source, 'package.json');
 
 // Az eredeti package.json tartalmát olvassuk be, mielőtt másolnánk
 let templatePkg = null;
+console.log('sourcePackageJson path:', sourcePackageJson);
+console.log('sourcePackageJson létezik:', fs.existsSync(sourcePackageJson));
+
 if (fs.existsSync(sourcePackageJson)) {
   try {
     const raw = fs.readFileSync(sourcePackageJson, 'utf8');
     templatePkg = JSON.parse(raw);
+    console.log('Template package.json beolvasva, dependencies:', Object.keys(templatePkg.dependencies || {}));
   } catch (error) {
     console.error('Hiba az eredeti package.json beolvasása során:', error);
   }
@@ -52,6 +56,8 @@ if (fs.existsSync(source)) {
 }
 
 // Biztosítja, hogy a cél package.json dependencies, devDependencies és scripts kulcsai a sablonnal egyezzenek
+console.log('targetPackageJson path:', targetPackageJson);
+console.log('templatePkg adat van-e:', !!templatePkg);
 syncPackageJsonDependencies(targetPackageJson, templatePkg);
 
 function syncPackageJsonDependencies(targetPath, templatePkg) {
@@ -65,7 +71,12 @@ function syncPackageJsonDependencies(targetPath, templatePkg) {
     if (fs.existsSync(targetPath)) {
       const targetRaw = fs.readFileSync(targetPath, 'utf8');
       targetPkg = JSON.parse(targetRaw);
+      console.log('Target package.json előtte, dependencies:', Object.keys(targetPkg.dependencies || {}));
     }
+
+    console.log('Template dependencies:', Object.keys(templatePkg.dependencies || {}));
+    console.log('Template devDependencies:', Object.keys(templatePkg.devDependencies || {}));
+    console.log('Template scripts:', Object.keys(templatePkg.scripts || {}));
 
     targetPkg.dependencies = templatePkg.dependencies || {};
     targetPkg.devDependencies = templatePkg.devDependencies || {};
@@ -73,6 +84,8 @@ function syncPackageJsonDependencies(targetPath, templatePkg) {
 
     // Eltávolítjuk az sg-frontend-starter függőséget
     delete targetPkg.dependencies['sg-frontend-starter'];
+
+    console.log('Target package.json után, dependencies:', Object.keys(targetPkg.dependencies || {}));
 
     fs.writeFileSync(targetPath, JSON.stringify(targetPkg, null, 2) + '\n');
     console.log('✓ package.json scripts/dependencies szinkronizálva a sablonnal');
