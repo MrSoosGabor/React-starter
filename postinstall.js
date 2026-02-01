@@ -13,6 +13,17 @@ const projectRoot = path.join(__dirname, '..', '..');
 const targetPackageJson = path.join(projectRoot, 'package.json');
 const sourcePackageJson = path.join(source, 'package.json');
 
+// Az eredeti package.json tartalmát olvassuk be, mielőtt másolnánk
+let templatePkg = null;
+if (fs.existsSync(sourcePackageJson)) {
+  try {
+    const raw = fs.readFileSync(sourcePackageJson, 'utf8');
+    templatePkg = JSON.parse(raw);
+  } catch (error) {
+    console.error('Hiba az eredeti package.json beolvasása során:', error);
+  }
+}
+
 if (fs.existsSync(source)) {
     // Az sg-frontend-starter mappájában lévő összes fájlt és mappát másolja ki
     const files = fs.readdirSync(source);
@@ -41,18 +52,15 @@ if (fs.existsSync(source)) {
 }
 
 // Biztosítja, hogy a cél package.json dependencies, devDependencies és scripts kulcsai a sablonnal egyezzenek
-syncPackageJsonDependencies(targetPackageJson, sourcePackageJson);
+syncPackageJsonDependencies(targetPackageJson, templatePkg);
 
-function syncPackageJsonDependencies(targetPath, templatePath) {
-  if (!fs.existsSync(templatePath)) {
-    console.error('Nem található a sablon package.json:', templatePath);
+function syncPackageJsonDependencies(targetPath, templatePkg) {
+  if (!templatePkg) {
+    console.error('Nincs sablon package.json adat');
     return;
   }
 
   try {
-    const templateRaw = fs.readFileSync(templatePath, 'utf8');
-    const templatePkg = JSON.parse(templateRaw);
-
     let targetPkg = {};
     if (fs.existsSync(targetPath)) {
       const targetRaw = fs.readFileSync(targetPath, 'utf8');
