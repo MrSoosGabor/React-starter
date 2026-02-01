@@ -14,36 +14,36 @@ const targetPackageJson = path.join(projectRoot, 'package.json');
 const sourcePackageJson = path.join(source, 'package.json');
 
 if (fs.existsSync(source)) {
-  // Az sg-frontend-starter mappájában lévő összes fájlt és mappát másolja ki
-  const files = fs.readdirSync(source);
-  
-  files.forEach(file => {
-    // Kihagyja a node_modules-t, package.json-t és magát a postinstall.js-t
-    if (file !== 'node_modules' && file !== 'package.json' && file !== 'postinstall.js') {
-      const srcPath = path.join(source, file);
-      const destPath = path.join(projectRoot, file);
-      
-      if (fs.existsSync(destPath)) {
-        fs.rmSync(destPath, { recursive: true, force: true });
+    // Az sg-frontend-starter mappájában lévő összes fájlt és mappát másolja ki
+    const files = fs.readdirSync(source);
+    
+    files.forEach(file => {
+      // Kihagyja a node_modules-t, package.json-t és magát a postinstall.js-t
+      if (file !== 'node_modules' && file !== 'package.json' && file !== 'postinstall.js') {
+        const srcPath = path.join(source, file);
+        const destPath = path.join(projectRoot, file);
+        
+        if (fs.existsSync(destPath)) {
+          fs.rmSync(destPath, { recursive: true, force: true });
+        }
+        
+        // Másolja a fájlt/mappát
+        const stat = fs.statSync(srcPath);
+        if (stat.isDirectory()) {
+          copyDir(srcPath, destPath);
+        } else {
+          fs.copyFileSync(srcPath, destPath);
+        }
       }
-      
-      // Másolja a fájlt/mappát
-      const stat = fs.statSync(srcPath);
-      if (stat.isDirectory()) {
-        copyDir(srcPath, destPath);
-      } else {
-        fs.copyFileSync(srcPath, destPath);
-      }
-    }
-  });
-  
-  console.log('✓ sg-frontend-starter tartalma sikeresen áthelyezve');
+    });
+    
+    console.log('✓ sg-frontend-starter tartalma sikeresen áthelyezve');
 }
 
-// Biztosítja, hogy a cél package.json megegyezzen a sablonnal
-syncPackageJson(targetPackageJson, sourcePackageJson);
+// Biztosítja, hogy a cél package.json dependencies, devDependencies és scripts kulcsai a sablonnal egyezzenek
+syncPackageJsonDependencies(targetPackageJson, sourcePackageJson);
 
-function syncPackageJson(targetPath, templatePath) {
+function syncPackageJsonDependencies(targetPath, templatePath) {
   if (!fs.existsSync(templatePath)) {
     console.error('Nem található a sablon package.json:', templatePath);
     return;
@@ -53,8 +53,18 @@ function syncPackageJson(targetPath, templatePath) {
     const templateRaw = fs.readFileSync(templatePath, 'utf8');
     const templatePkg = JSON.parse(templateRaw);
 
-    fs.writeFileSync(targetPath, JSON.stringify(templatePkg, null, 2) + '\n');
-    console.log('✓ package.json szinkronizálva a sablonnal');
+    let targetPkg = {};
+    if (fs.existsSync(targetPath)) {
+      const targetRaw = fs.readFileSync(targetPath, 'utf8');
+      targetPkg = JSON.parse(targetRaw);
+    }
+
+    targetPkg.dependencies = templatePkg.dependencies || {};
+    targetPkg.devDependencies = templatePkg.devDependencies || {};
+    targetPkg.scripts = templatePkg.scripts || {};
+
+    fs.writeFileSync(targetPath, JSON.stringify(targetPkg, null, 2) + '\n');
+    console.log('✓ package.json scripts/dependencies szinkronizálva a sablonnal');
   } catch (error) {
     console.error('Hiba a package.json szinkronizálása során:', error);
   }
