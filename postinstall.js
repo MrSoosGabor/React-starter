@@ -10,6 +10,8 @@ const source = path.join(__dirname);
 // A végső cél: a node_modules/sg-frontend-starter szülőjéhez képest (ahol az npm install fut)
 const projectRoot = path.join(__dirname, '..', '..');
 
+const targetPackageJson = path.join(projectRoot, 'package.json');
+
 if (fs.existsSync(source)) {
   // Az sg-frontend-starter mappájában lévő összes fájlt és mappát másolja ki
   const files = fs.readdirSync(source);
@@ -35,6 +37,32 @@ if (fs.existsSync(source)) {
   });
   
   console.log('✓ sg-frontend-starter tartalma sikeresen áthelyezve');
+}
+
+// Biztosítja, hogy a cél package.json tartalmazza a dev scriptet
+ensureDevScript(targetPackageJson);
+
+function ensureDevScript(packageJsonPath) {
+  if (!fs.existsSync(packageJsonPath)) {
+    return;
+  }
+
+  try {
+    const raw = fs.readFileSync(packageJsonPath, 'utf8');
+    const pkg = JSON.parse(raw);
+
+    if (!pkg.scripts) {
+      pkg.scripts = {};
+    }
+
+    if (!pkg.scripts.dev) {
+      pkg.scripts.dev = 'vite';
+      fs.writeFileSync(packageJsonPath, JSON.stringify(pkg, null, 2) + '\n');
+      console.log('✓ dev script hozzáadva a package.json-hoz');
+    }
+  } catch (error) {
+    console.error('Hiba a package.json frissítése során:', error);
+  }
 }
 
 // Segédfunkció a mappák rekurzív másolásához
