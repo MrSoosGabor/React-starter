@@ -1,0 +1,121 @@
+/* Form Container */
+.form-container {
+  max-width: 500px !important;
+  width: 90% !important;
+  padding: 30px !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+}
+
+.form-container h2 {
+  color: white !important;
+  text-align: center !important;
+  margin-bottom: 30px !important;
+  font-size: 28px !important;
+  font-weight: 600 !important;
+  width: 100% !important;
+}
+
+/* Form */
+.form-container form {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 20px !important;
+}
+
+/* Form Fields */
+.form-group {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  margin-bottom: 0 !important;
+}
+
+.form-group label {
+  display: block !important;
+  margin-bottom: 8px !important;
+  color: white !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  letter-spacing: 0.5px !important;
+}
+
+.form-group input,
+.form-group select {
+  width: 100% !important;
+  padding: 12px 15px !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 6px !important;
+  font-size: 14px !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  transition: all 0.3s ease !important;
+  box-sizing: border-box !important;
+  color: #333 !important;
+  display: block !important;
+  margin: 0 !important;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: white;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+.form-group select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 1.5em;
+  padding-right: 38px;
+}
+
+/* Error Messages */
+.form-group .error-message {
+  color: #ff6b6b !important;
+  font-size: 12px !important;
+  margin-top: 6px !important;
+  font-weight: 500 !important;
+  display: block !important;
+}
+
+/* Submit Button */
+.form-group button {
+  width: 100% !important;
+  padding: 12px !important;
+  background-color: white !important;
+  color: #667eea !important;
+  border: none !important;
+  border-radius: 6px !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  margin-top: 10px !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+  display: block !important;
+}
+
+.form-group button:hover:not(:disabled) {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.form-group button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-group button:active:not(:disabled) {
+  transform: translateY(0);
+}
