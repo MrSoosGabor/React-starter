@@ -12,22 +12,15 @@ const projectRoot = path.join(__dirname, '..', '..');
 
 const targetPackageJson = path.join(projectRoot, 'package.json');
 const sourcePackageJson = path.join(source, 'package.json');
-const templateDataFile = path.join(projectRoot, '.template-pkg-data.json');
+const devPackageJson = path.join(projectRoot, 'package.json.dev');
 
-// Az eredeti package.json tartalmát olvassuk be és mentsük el
-let templatePkg = null;
+// Az eredeti package.json tartalmát másoljuk package.json.dev néven
 if (fs.existsSync(sourcePackageJson)) {
   try {
-    const raw = fs.readFileSync(sourcePackageJson, 'utf8');
-    templatePkg = JSON.parse(raw);
-    // Mentsük el a template adatokat, hogy később olvashassuk
-    fs.writeFileSync(templateDataFile, JSON.stringify({
-      dependencies: templatePkg.dependencies || {},
-      devDependencies: templatePkg.devDependencies || {},
-      scripts: templatePkg.scripts || {}
-    }));
+    fs.copyFileSync(sourcePackageJson, devPackageJson);
+    console.log('✓ package.json.dev létrehozva');
   } catch (error) {
-    console.error('Hiba az eredeti package.json beolvasása során:', error);
+    console.error('Hiba a package.json.dev létrehozása során:', error);
   }
 }
 
@@ -56,42 +49,6 @@ if (fs.existsSync(source)) {
     });
     
     console.log('✓ sg-frontend-starter tartalma sikeresen áthelyezve');
-}
-
-// Biztosítja, hogy a cél package.json dependencies, devDependencies és scripts kulcsai a sablonnal egyezzenek
-syncPackageJsonDependencies(targetPackageJson, templateDataFile);
-
-function syncPackageJsonDependencies(targetPath, templateDataPath) {
-  if (!fs.existsSync(templateDataPath)) {
-    console.error('Nincs sablon adat fájl');
-    return;
-  }
-
-  try {
-    const templateDataRaw = fs.readFileSync(templateDataPath, 'utf8');
-    const templateData = JSON.parse(templateDataRaw);
-
-    let targetPkg = {};
-    if (fs.existsSync(targetPath)) {
-      const targetRaw = fs.readFileSync(targetPath, 'utf8');
-      targetPkg = JSON.parse(targetRaw);
-    }
-
-    targetPkg.dependencies = templateData.dependencies || {};
-    targetPkg.devDependencies = templateData.devDependencies || {};
-    targetPkg.scripts = templateData.scripts || {};
-
-    // Eltávolítjuk az sg-frontend-starter függőséget
-    delete targetPkg.dependencies['sg-frontend-starter'];
-
-    fs.writeFileSync(targetPath, JSON.stringify(targetPkg, null, 2) + '\n');
-    console.log('✓ package.json scripts/dependencies szinkronizálva a sablonnal');
-
-    // Töröljük a temp fájlt
-    fs.unlinkSync(templateDataPath);
-  } catch (error) {
-    console.error('Hiba a package.json szinkronizálása során:', error);
-  }
 }
 
 // Segédfunkció a mappák rekurzív másolásához
