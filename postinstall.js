@@ -59,7 +59,7 @@ if (fs.existsSync(source)) {
     console.log('✓ sg-frontend-starter tartalma sikeresen áthelyezve');
 }
 
-// Hozzunk létre egy setup.js fájlt a telepítés befejezéséhez
+// Hozzunk létre egy setup.mjs fájlt a telepítés befejezéséhez
 const setupScript = `import fs from 'fs';
 import { execSync } from 'child_process';
 
@@ -74,11 +74,11 @@ console.log('🚀 Alkalmazás indítása...');
 execSync('npm run dev', { stdio: 'inherit' });
 `;
 
-fs.writeFileSync(path.join(projectRoot, 'setup.js'), setupScript);
+fs.writeFileSync(path.join(projectRoot, 'setup.mjs'), setupScript);
 console.log('');
 console.log('✓ Telepítés kész!');
 console.log('');
-console.log('⚡ A telepítés befejezéséhez futtasd: node setup.js');
+console.log('⚡ A telepítés befejezéséhez futtasd: node setup.mjs');
 console.log('');
 
 // Segédfunkció a mappák rekurzív másolásához
