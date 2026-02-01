@@ -59,16 +59,27 @@ if (fs.existsSync(source)) {
     console.log('✓ sg-frontend-starter tartalma sikeresen áthelyezve');
 }
 
-// Cseréljük le a package.json-t a package.json.dev tartalmával
-if (fs.existsSync(devPackageJson)) {
-  try {
-    fs.copyFileSync(devPackageJson, targetPackageJson);
-    fs.unlinkSync(devPackageJson); // Töröljük a .dev fájlt
-    console.log('✓ package.json frissítve a template verzióval');
-  } catch (error) {
-    console.error('Hiba a package.json cseréje során:', error);
-  }
-}
+// Hozzunk létre egy setup.js fájlt a telepítés befejezéséhez
+const setupScript = `import fs from 'fs';
+import { execSync } from 'child_process';
+
+console.log('📦 Package.json frissítése...');
+fs.copyFileSync('package.json.dev', 'package.json');
+fs.unlinkSync('package.json.dev');
+
+console.log('📦 Függőségek telepítése...');
+execSync('npm install', { stdio: 'inherit' });
+
+console.log('🚀 Alkalmazás indítása...');
+execSync('npm run dev', { stdio: 'inherit' });
+`;
+
+fs.writeFileSync(path.join(projectRoot, 'setup.js'), setupScript);
+console.log('');
+console.log('✓ Telepítés kész!');
+console.log('');
+console.log('⚡ A telepítés befejezéséhez futtasd: node setup.js');
+console.log('');
 
 // Segédfunkció a mappák rekurzív másolásához
 function copyDir(src, dest) {
