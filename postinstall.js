@@ -43,20 +43,34 @@ if (fs.existsSync(source)) {
 ensureDevScript(targetPackageJson);
 
 function ensureDevScript(packageJsonPath) {
-  if (!fs.existsSync(packageJsonPath)) {
-    return;
+  let pkg = null;
+  let changed = false;
+
+  if (fs.existsSync(packageJsonPath)) {
+    try {
+      const raw = fs.readFileSync(packageJsonPath, 'utf8');
+      pkg = JSON.parse(raw);
+    } catch (error) {
+      console.error('Hiba a package.json beolvasása során:', error);
+      return;
+    }
+  } else {
+    pkg = { name: 'app', private: true, scripts: {} };
+    changed = true;
   }
 
   try {
-    const raw = fs.readFileSync(packageJsonPath, 'utf8');
-    const pkg = JSON.parse(raw);
-
     if (!pkg.scripts) {
       pkg.scripts = {};
+      changed = true;
     }
 
     if (!pkg.scripts.dev) {
       pkg.scripts.dev = 'vite';
+      changed = true;
+    }
+
+    if (changed) {
       fs.writeFileSync(packageJsonPath, JSON.stringify(pkg, null, 2) + '\n');
       console.log('✓ dev script hozzáadva a package.json-hoz');
     }
