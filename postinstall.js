@@ -14,10 +14,18 @@ const targetPackageJson = path.join(projectRoot, 'package.json');
 const sourcePackageJson = path.join(source, 'package.json');
 const devPackageJson = path.join(projectRoot, 'package.json.dev');
 
-// Az eredeti package.json tartalmát másoljuk package.json.dev néven
+// Az eredeti package.json tartalmát másoljuk package.json.dev néven, de postinstall script nélkül
 if (fs.existsSync(sourcePackageJson)) {
   try {
-    fs.copyFileSync(sourcePackageJson, devPackageJson);
+    const raw = fs.readFileSync(sourcePackageJson, 'utf8');
+    const pkg = JSON.parse(raw);
+    
+    // Eltávolítjuk a postinstall scriptet
+    if (pkg.scripts && pkg.scripts.postinstall) {
+      delete pkg.scripts.postinstall;
+    }
+    
+    fs.writeFileSync(devPackageJson, JSON.stringify(pkg, null, 2) + '\n');
     console.log('✓ package.json.dev létrehozva');
   } catch (error) {
     console.error('Hiba a package.json.dev létrehozása során:', error);
