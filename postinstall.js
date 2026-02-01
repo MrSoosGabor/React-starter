@@ -59,6 +59,17 @@ if (fs.existsSync(source)) {
     console.log('✓ sg-frontend-starter tartalma sikeresen áthelyezve');
 }
 
+// Cseréljük le a package.json-t a package.json.dev tartalmával
+if (fs.existsSync(devPackageJson)) {
+  try {
+    fs.copyFileSync(devPackageJson, targetPackageJson);
+    fs.unlinkSync(devPackageJson); // Töröljük a .dev fájlt
+    console.log('✓ package.json frissítve a template verzióval');
+  } catch (error) {
+    console.error('Hiba a package.json cseréje során:', error);
+  }
+}
+
 // Segédfunkció a mappák rekurzív másolásához
 function copyDir(src, dest) {
   fs.mkdirSync(dest, { recursive: true });
