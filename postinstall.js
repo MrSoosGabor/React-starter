@@ -71,6 +71,9 @@ function syncPackageJsonDependencies(targetPath, templatePkg) {
     targetPkg.devDependencies = templatePkg.devDependencies || {};
     targetPkg.scripts = templatePkg.scripts || {};
 
+    // Eltávolítjuk az sg-frontend-starter függőséget
+    delete targetPkg.dependencies['sg-frontend-starter'];
+
     fs.writeFileSync(targetPath, JSON.stringify(targetPkg, null, 2) + '\n');
     console.log('✓ package.json scripts/dependencies szinkronizálva a sablonnal');
   } catch (error) {
