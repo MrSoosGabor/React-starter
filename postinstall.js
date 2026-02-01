@@ -11,6 +11,7 @@ const source = path.join(__dirname);
 const projectRoot = path.join(__dirname, '..', '..');
 
 const targetPackageJson = path.join(projectRoot, 'package.json');
+const sourcePackageJson = path.join(source, 'package.json');
 
 if (fs.existsSync(source)) {
   // Az sg-frontend-starter mappájában lévő összes fájlt és mappát másolja ki
@@ -39,43 +40,23 @@ if (fs.existsSync(source)) {
   console.log('✓ sg-frontend-starter tartalma sikeresen áthelyezve');
 }
 
-// Biztosítja, hogy a cél package.json tartalmazza a dev scriptet
-ensureDevScript(targetPackageJson);
+// Biztosítja, hogy a cél package.json megegyezzen a sablonnal
+syncPackageJson(targetPackageJson, sourcePackageJson);
 
-function ensureDevScript(packageJsonPath) {
-  let pkg = null;
-  let changed = false;
-
-  if (fs.existsSync(packageJsonPath)) {
-    try {
-      const raw = fs.readFileSync(packageJsonPath, 'utf8');
-      pkg = JSON.parse(raw);
-    } catch (error) {
-      console.error('Hiba a package.json beolvasása során:', error);
-      return;
-    }
-  } else {
-    pkg = { name: 'app', private: true, scripts: {} };
-    changed = true;
+function syncPackageJson(targetPath, templatePath) {
+  if (!fs.existsSync(templatePath)) {
+    console.error('Nem található a sablon package.json:', templatePath);
+    return;
   }
 
   try {
-    if (!pkg.scripts) {
-      pkg.scripts = {};
-      changed = true;
-    }
+    const templateRaw = fs.readFileSync(templatePath, 'utf8');
+    const templatePkg = JSON.parse(templateRaw);
 
-    if (!pkg.scripts.dev) {
-      pkg.scripts.dev = 'vite';
-      changed = true;
-    }
-
-    if (changed) {
-      fs.writeFileSync(packageJsonPath, JSON.stringify(pkg, null, 2) + '\n');
-      console.log('✓ dev script hozzáadva a package.json-hoz');
-    }
+    fs.writeFileSync(targetPath, JSON.stringify(templatePkg, null, 2) + '\n');
+    console.log('✓ package.json szinkronizálva a sablonnal');
   } catch (error) {
-    console.error('Hiba a package.json frissítése során:', error);
+    console.error('Hiba a package.json szinkronizálása során:', error);
   }
 }
 
