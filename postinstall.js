@@ -6,8 +6,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Az sg-frontend-starter modulban belül keresünk
-const source = path.join(__dirname, 'node_modules', 'sg-frontend-starter');
-// A végső cél: a projekt gyökeréhez képest
+const source = path.join(__dirname);
+// A végső cél: a node_modules/sg-frontend-starter szülőjéhez képest (ahol az npm install fut)
 const projectRoot = path.join(__dirname, '..', '..');
 
 if (fs.existsSync(source)) {
@@ -15,8 +15,8 @@ if (fs.existsSync(source)) {
   const files = fs.readdirSync(source);
   
   files.forEach(file => {
-    // Kihagyja a node_modules-t és package.json-t ha szükséges
-    if (file !== 'node_modules' && file !== 'package.json') {
+    // Kihagyja a node_modules-t, package.json-t és magát a postinstall.js-t
+    if (file !== 'node_modules' && file !== 'package.json' && file !== 'postinstall.js') {
       const srcPath = path.join(source, file);
       const destPath = path.join(projectRoot, file);
       
