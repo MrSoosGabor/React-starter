@@ -67,6 +67,11 @@ console.log('📦 Package.json frissítése...');
 fs.copyFileSync('package.json.dev', 'package.json');
 fs.unlinkSync('package.json.dev');
 
+// Hasznalat.txt törlése, ha létezik
+if (fs.existsSync('Hasznalat.txt')) {
+  fs.unlinkSync('Hasznalat.txt');
+}
+
 console.log('📦 Függőségek telepítése...');
 execSync('npm install', { stdio: 'inherit' });
 
