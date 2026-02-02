@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { tobbOldalAPI, egyOldalAPI } from "./services/api";
 
 function App() {
   const [tobbOldal, setTobbOldal] = useState([]);
