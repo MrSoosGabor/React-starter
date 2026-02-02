@@ -42,7 +42,7 @@ export async function apiCall(endpoint, options = {}) {
 }
 
 // Specifikus API hívások
-export const tobb_oldalAPI = {
+export const tobbOldalAPI = {
   getAll: () => apiCall(ENDPOINTS.TOBB_OLDAL),
   
   getById: (id) => apiCall(`${ENDPOINTS.TOBB_OLDAL}/${id}`),
@@ -62,7 +62,7 @@ export const tobb_oldalAPI = {
   }),
 };
 
-export const egy_oldalAPI = {
+export const egyOldalAPI = {
   getAll: () => apiCall(ENDPOINTS.EGY_OLDAL),
   
   getById: (id) => apiCall(`${ENDPOINTS.EGY_OLDAL}/${id}`),

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function TobbOldalEditModal({ isOpen, telefon, egyOldal, onClose, onSave }) {
+export default function EditModal({ isOpen, telefon, egyOldal, onClose, onSave }) {
   const [editingTelefon, setEditingTelefon] = useState(null);
 
   // Frissítjük az editingTelefon state-et, amikor a telefon prop megváltozik

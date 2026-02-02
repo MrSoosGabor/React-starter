@@ -1,8 +1,7 @@
 import { useState } from 'react';
 
-export default function TobbOldalForm({ egyOldal, onSubmit }) {
-  console.log(egyOldal);
-  
+export default function Form({ egyOldal, onSubmit }) {
+
   const [formData, setFormData] = useState({
     nev: '',
     url: '',
@@ -69,7 +68,7 @@ export default function TobbOldalForm({ egyOldal, onSubmit }) {
             >
               <option value="">Válasszon kategóriát...</option>
               {egyOldal && egyOldal.map((kat, index) => (
-                <option key={kat.id || index} value={kat.id}>
+                <option key={kat._id || index} value={kat._id}>
                   {kat.nev}
                 </option>
               ))}

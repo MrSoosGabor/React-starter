@@ -1,13 +1,10 @@
 import { useState } from "react";
-import TobbOldalEditModal from "./TobbOldalEditModal";
+import TobbOldalEditModal from "./EditModal";
 
-export default function TobbOldalGrid({ tobbOldal, egyOldal, onDelete, onUpdate }) {
+export default function Grid({ tobbOldal, egyOldal, onDelete, onUpdate }) {
   const [editingTobbOldal, setEditingTobbOldal] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-
-  console.log(tobbOldal);
-  
   const openEditModal = (tobbOldal) => {
     setEditingTobbOldal({ ...tobbOldal });
     setShowModal(true);
