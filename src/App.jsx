@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import TelefonForm from "./components/TelefonForm";
-import TelefonGrid from "./components/TelefonGrid";
+import TobbOldalForm from "./components/TobbOldalForm";
+import TobbOldalGrid from "./components/TobbOldalGrid";
 import { tobb_oldalAPI, egy_oldalAPI } from "./services/api";
+import { Route, BrowserRouter as Router, Routes } from "react-router";
+import Home from "./components/Home";
 
 function App() {
-  const [gyartok, setGyartok] = useState([]);
-  const [mobilok, setMobilok] = useState([]);
+  const [tobbOldal, setTobbOldal] = useState([]);
+  const [egyOldal, setEgyOldal] = useState([]);
   
   useEffect(() => {
     loadData();
@@ -13,13 +15,13 @@ function App() {
 
   const loadData = async () => {
     try {
-      const gyartokData = await egy_oldalAPI.getAll();
-      console.log("Gyártók:", gyartokData);
-      setGyartok(gyartokData);
+      const egyOldalData = await egy_oldalAPI.getAll();
+      //console.log("Egy oldali adatok:", egyOldalData);
+      setEgyOldal(egyOldalData);
 
-      const mobilokData = await tobb_oldalAPI.getAll();
-      console.log("Telefonok:", mobilokData);
-      setMobilok(mobilokData);
+      const tobbOldalData = await tobb_oldalAPI.getAll();
+      //console.log("Több oldali adatok:", tobbOldalData);
+      setTobbOldal(tobbOldalData);
     } catch (error) {
       console.error("Hiba az adatok betöltése során:", error);
       alert("Hiba történt az adatok betöltése során");
@@ -33,8 +35,8 @@ function App() {
       alert("Sikeres adatfelvétel");
       
       // Újra betöltjük a telefonok listáját
-      const mobilokData = await tobb_oldalAPI.getAll();
-      setMobilok(mobilokData);
+      const tobbOldalData = await tobb_oldalAPI.getAll();
+      setTobbOldal(tobbOldalData);
     } catch (error) {
       console.error("Hiba az adatfelvétel során:", error);
       alert("Hiba történt az adatfelvétel során: " + error.message);
@@ -49,9 +51,9 @@ function App() {
       alert("Telefon sikeresen módosítva");
       
       // Frissítjük a listát
-      const mobilokData = await tobb_oldalAPI.getAll();
-      console.log("Telefonok:", mobilokData);
-      setMobilok(mobilokData);
+      const tobbOldalData = await tobb_oldalAPI.getAll();
+      console.log("Telefonok:", tobbOldalData);
+      setTobbOldal(tobbOldalData);
     } catch (error) {
       console.error("Hiba a módosítás során:", error);
       alert("Hiba történt a módosítás során: " + error.message);
@@ -65,9 +67,9 @@ function App() {
         alert("Telefon sikeresen törölve");
         
         // Frissítjük a listát
-        const mobilokData = await tobb_oldalAPI.getAll();
-        console.log("Telefonok:", mobilokData);
-        setMobilok(mobilokData);
+        const tobbOldalData = await tobb_oldalAPI.getAll();
+        console.log("Telefonok:", tobbOldalData);
+        setTobbOldal(tobbOldalData);
       } catch (error) {
         console.error("Hiba a törlés során:", error);
         alert("Hiba történt a törlés során: " + error.message);
@@ -77,13 +79,21 @@ function App() {
   
   return (
     <>
-      <TelefonForm gyartok={gyartok} onSubmit={handleSubmit} />
-      <TelefonGrid 
-        mobilok={mobilok} 
-        gyartok={gyartok} 
-        onDelete={handleDelete} 
-        onUpdate={handleUpdate}
-      />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/lista" element={<TobbOldalGrid 
+            tobbOldal={tobbOldal} 
+            egyOldal={egyOldal} 
+            onDelete={handleDelete} 
+            onUpdate={handleUpdate}
+          />} />
+          <Route path="/felvitel" element={<TobbOldalForm 
+            egyOldal={egyOldal} 
+            onSubmit={handleSubmit}
+          />} />
+        </Routes>
+      </Router>
     </>
   )
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function TelefonEditModal({ isOpen, telefon, gyartok, onClose, onSave }) {
+export default function TobbOldalEditModal({ isOpen, telefon, egyOldal, onClose, onSave }) {
   const [editingTelefon, setEditingTelefon] = useState(null);
 
   // Frissítjük az editingTelefon state-et, amikor a telefon prop megváltozik
@@ -89,12 +89,12 @@ export default function TelefonEditModal({ isOpen, telefon, gyartok, onClose, on
                   className="form-select"
                   value={editingTelefon.gyartId._id || editingTelefon.gyartId}
                   onChange={(e) => {
-                    const selectedGyarto = gyartok.find(g => g._id === e.target.value);
+                    const selectedGyarto = egyOldal.find(g => g._id === e.target.value);
                     setEditingTelefon({...editingTelefon, gyartId: selectedGyarto || e.target.value});
                   }}
                 >
                   <option value="">-- Válasszon gyártót --</option>
-                  {gyartok.map((gyarto) => (
+                  {egyOldal.map((gyarto) => (
                     <option key={gyarto._id} value={gyarto._id}>{gyarto.nev}</option>
                   ))}
                 </select>

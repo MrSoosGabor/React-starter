@@ -1,18 +1,21 @@
 import { useState } from "react";
-import TelefonEditModal from "./TelefonEditModal";
+import TobbOldalEditModal from "./TobbOldalEditModal";
 
-export default function TelefonGrid({ mobilok, gyartok, onDelete, onUpdate }) {
-  const [editingTelefon, setEditingTelefon] = useState(null);
+export default function TobbOldalGrid({ tobbOldal, egyOldal, onDelete, onUpdate }) {
+  const [editingTobbOldal, setEditingTobbOldal] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  const openEditModal = (telefon) => {
-    setEditingTelefon({ ...telefon });
+
+  console.log(tobbOldal);
+  
+  const openEditModal = (tobbOldal) => {
+    setEditingTobbOldal({ ...tobbOldal });
     setShowModal(true);
   }
 
   const closeModal = () => {
     setShowModal(false);
-    setEditingTelefon(null);
+    setEditingTobbOldal(null);
   }
 
   const handleUpdate = async (id, updateData) => {
@@ -23,34 +26,34 @@ export default function TelefonGrid({ mobilok, gyartok, onDelete, onUpdate }) {
   return (
     <>
       <div className="container mt-5 mb-5">
-        <h2 className="mb-4">Telefonok Listája</h2>
+        <h2 className="mb-4">Lista</h2>
         <div className="row g-4">
-          {mobilok && mobilok.length > 0 ? (
-            mobilok.map((telefon) => {
+          {tobbOldal && tobbOldal.length > 0 ? (
+            tobbOldal.map((tobbOldal) => {
               return (
-                <div key={telefon._id} className="col-md-4 col-sm-6 col-12">
+                <div key={tobbOldal._id} className="col-md-4 col-sm-6 col-12">
                   <div className="card h-100 shadow-sm" style={{ borderTop: "4px solid #667eea" }}>
                     <div className="card-body">
-                      <h5 className="card-title text-primary">{telefon.nev}</h5>
+                      <h5 className="card-title text-primary">{tobbOldal.nev}</h5>
                       <p className="card-text mb-2">
-                        <strong>ID:</strong> {telefon._id}
+                        <strong>ID:</strong> {tobbOldal._id}
                       </p>
                       <p className="card-text mb-2">
-                        <strong>Ár:</strong> <span className="text-success fw-bold">{telefon.ar} Ft</span>
+                        <strong>Ár:</strong> <span className="text-success fw-bold">{tobbOldal.ar} Ft</span>
                       </p>
                       <p className="card-text mb-0">
-                        <strong>Gyártó:</strong> {telefon.gyartId ? telefon.gyartId.nev : "Ismeretlen"}
+                        <strong>Gyártó:</strong> {tobbOldal.gyartId ? tobbOldal.gyartId.nev : "Ismeretlen"}
                       </p>
                       <div className="d-flex gap-2 mt-3">
                         <button 
                           className="btn btn-warning btn-sm flex-grow-1"
-                          onClick={() => openEditModal(telefon)}
+                          onClick={() => openEditModal(tobbOldal)}
                         >
                           Módosítás
                         </button>
                         <button 
                           className="btn btn-danger btn-sm flex-grow-1"
-                          onClick={() => onDelete(telefon._id)}
+                          onClick={() => onDelete(tobbOldal._id)}
                         >
                           Törlés
                         </button>
@@ -62,16 +65,16 @@ export default function TelefonGrid({ mobilok, gyartok, onDelete, onUpdate }) {
             })
           ) : (
             <div className="col-12">
-              <div className="alert alert-info text-center">Nincsenek telefonok az adatbázisban</div>
+              <div className="alert alert-info text-center">Üres a lista</div>
             </div>
           )}
         </div>
       </div>
       
-      <TelefonEditModal 
+      <TobbOldalEditModal 
         isOpen={showModal}
-        telefon={editingTelefon}
-        gyartok={gyartok}
+        tobbOldal={editingTobbOldal}
+        egyOldal={egyOldal}
         onClose={closeModal}
         onSave={handleUpdate}
       />
