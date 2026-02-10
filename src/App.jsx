@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router";
 
 function App() {
+  const [adatok, setAdatok] = useState([])
+  console.log(adatok);
 
   useEffect(() => {
     fetchData();
@@ -12,6 +14,7 @@ function App() {
     const res = await fetch('http://localhost:3000/api/data')
     const data = await res.json()
     console.log(data);
+    setAdatok(data)
   };
 
   const addData = async () => {
@@ -49,7 +52,7 @@ function App() {
           Add Data
         </button>
         <Routes>
-          <Route path='/' element={<Home data={data} />} />
+          <Route path='/' element={<Home data={adatok} />} />
         </Routes>
       </BrowserRouter>
     </>
