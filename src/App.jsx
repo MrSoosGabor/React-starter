@@ -4,6 +4,7 @@ function App() {
 
   useEffect(() => {
     fetchData();
+    fetchDataById(1);
   }, []);
 
   const fetchData = async () => {
