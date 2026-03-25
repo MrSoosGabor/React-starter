@@ -99,7 +99,13 @@ async function main() {
   console.log('✓ Függőségek frissítve a legújabb verziókra');
 
   console.log('📦 Függőségek telepítése...');
-  execSync('npm install', { stdio: 'inherit', cwd: targetDir });
+  try {
+    execSync('npm install', { stdio: 'inherit', cwd: targetDir });
+  } catch {
+    console.log('');
+    console.log('⚠️  Peer dependency konfliktus, --legacy-peer-deps opcióval próbálom...');
+    execSync('npm install --legacy-peer-deps', { stdio: 'inherit', cwd: targetDir });
+  }
 
   console.log('');
   console.log('✅ Projekt sikeresen létrehozva!');
