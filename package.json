@@ -1,6 +1,6 @@
 {
   "name": "sg-frontend-starter",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "type": "module",
   "bin": {
     "sg-frontend-starter": "./bin/create.js"
